@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"github.com/Reza-Rayan/internal/domain/models"
 	"log"
 
 	"github.com/Reza-Rayan/internal/config"
@@ -23,7 +24,9 @@ func InitDB() {
 
 	// AutoMigrate tables
 	err = DB.AutoMigrate(
-	//	Add Models HERE
+		//	Add Models HERE
+		models.User{},
+		models.Message{},
 	)
 	if err != nil {
 		panic(fmt.Sprintf("Migration failed: %v", err))
