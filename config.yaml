@@ -1,0 +1,8 @@
+server:
+  port: ":5050"
+
+database:
+  path: "chat.db"
+
+jwt:
+  secret: "1qaz@WSXcDe#NotCTTel99"
