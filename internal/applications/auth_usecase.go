@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/Reza-Rayan/internal/adapters"
 	"github.com/Reza-Rayan/internal/domain/models"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/Reza-Rayan/utils"
 	"time"
 )
 
@@ -29,7 +29,7 @@ func (auth *AuthUsecase) Signup(username, password, email, phone, avatar string)
 	}
 
 	//	Create & HashPassword
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hash, err := utils.HashPassword(password)
 	if err != nil {
 		return nil, err
 	}
