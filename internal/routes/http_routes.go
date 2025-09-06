@@ -55,7 +55,7 @@ func SetupRouter() *gin.Engine {
 	wsHandler := ws.NewWSHandler(hub, messageUC)
 
 	wsGroup := routes.Group("/ws")
-	wsGroup.Use(middleware.AuthMiddleware())
+	wsGroup.Use(middleware.AuthMiddlewareWS())
 	{
 		wsGroup.GET("/chat", wsHandler.ServeWs())
 	}
