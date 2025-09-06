@@ -2,17 +2,17 @@ package applications
 
 import (
 	"errors"
-	"github.com/Reza-Rayan/internal/adapters"
+	"github.com/Reza-Rayan/internal/adapters/http/repositories"
 	"github.com/Reza-Rayan/internal/domain/models"
 	"github.com/Reza-Rayan/utils"
 	"time"
 )
 
 type AuthUsecase struct {
-	userRepo *adapters.UserRepository
+	userRepo *repositories.UserRepository
 }
 
-func NewAuthUsecase(userRepo *adapters.UserRepository) *AuthUsecase {
+func NewAuthUsecase(userRepo *repositories.UserRepository) *AuthUsecase {
 	return &AuthUsecase{userRepo: userRepo}
 }
 

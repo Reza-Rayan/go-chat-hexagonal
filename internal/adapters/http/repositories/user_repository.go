@@ -1,4 +1,4 @@
-package adapters
+package repositories
 
 import (
 	"github.com/Reza-Rayan/internal/domain/models"
@@ -51,4 +51,15 @@ func (r *UserRepository) AddFriend(userID, friendID uint) error {
 		return err
 	}
 	return r.Db.Model(&user).Association("Friends").Append(&friend)
+}
+
+func (r *UserRepository) SearchUsers(query string) ([]*models.User, error) {
+	var users []*models.User
+	if err := r.Db.Where("username LIKE ? OR email LIKE ?", "%"+query+"%", "%"+query+"%").Find(&users).Error; err != nil {
+		return nil, err
+	}
+	for _, u := range users {
+		u.Password = ""
+	}
+	return users, nil
 }

@@ -2,15 +2,15 @@ package applications
 
 import (
 	"errors"
-	"github.com/Reza-Rayan/internal/adapters"
+	"github.com/Reza-Rayan/internal/adapters/http/repositories"
 	"github.com/Reza-Rayan/internal/domain/models"
 )
 
 type FriendUsecase struct {
-	userRepo *adapters.UserRepository
+	userRepo *repositories.UserRepository
 }
 
-func NewFriendUsecase(userRepo *adapters.UserRepository) *FriendUsecase {
+func NewFriendUsecase(userRepo *repositories.UserRepository) *FriendUsecase {
 	return &FriendUsecase{userRepo: userRepo}
 }
 

@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"github.com/Reza-Rayan/internal/adapters"
 	http "github.com/Reza-Rayan/internal/adapters/http/handlers"
+	"github.com/Reza-Rayan/internal/adapters/http/repositories"
 	"github.com/Reza-Rayan/internal/applications"
 	"github.com/Reza-Rayan/internal/db"
 	"github.com/gin-gonic/gin"
@@ -11,15 +11,17 @@ import (
 func SetupRouter() *gin.Engine {
 	routes := gin.Default()
 
-	userRepo := &adapters.UserRepository{Db: db.DB}
+	userRepo := &repositories.UserRepository{Db: db.DB}
 
 	// Usecase
 	authUC := applications.NewAuthUsecase(userRepo)
 	friendUC := applications.NewFriendUsecase(userRepo)
+	userUC := applications.NewUserUsecase(userRepo)
 
 	// Handler
 	authHandler := http.NewAuthHandler(authUC)
 	friendHandler := http.NewFriendHandler(friendUC)
+	userHandler := http.NewUserHandler(userUC)
 
 	// Routes
 	api := routes.Group("/api")
@@ -30,6 +32,8 @@ func SetupRouter() *gin.Engine {
 		// Friend Routes
 		api.GET("/users/:id/friends", friendHandler.GetFriendsHandler)
 		api.POST("/users/:id/friends/:friendId", friendHandler.AddFriendHandler)
+		//	user Routes
+		api.GET("/users/search", userHandler.SearchUsersHandler)
 	}
 
 	return routes
