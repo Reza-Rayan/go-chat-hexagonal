@@ -33,3 +33,22 @@ func (r *UserRepository) FindByUsername(username string) (*models.User, error) {
 	}
 	return &user, nil
 }
+
+func (r *UserRepository) FindByIDWithFriends(id uint) (*models.User, error) {
+	var user models.User
+	if err := r.Db.Preload("Friends").First(&user, id).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (r *UserRepository) AddFriend(userID, friendID uint) error {
+	var user, friend models.User
+	if err := r.Db.First(&user, userID).Error; err != nil {
+		return err
+	}
+	if err := r.Db.First(&friend, friendID).Error; err != nil {
+		return err
+	}
+	return r.Db.Model(&user).Association("Friends").Append(&friend)
+}

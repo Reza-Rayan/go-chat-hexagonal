@@ -15,15 +15,21 @@ func SetupRouter() *gin.Engine {
 
 	// Usecase
 	authUC := applications.NewAuthUsecase(userRepo)
+	friendUC := applications.NewFriendUsecase(userRepo)
 
 	// Handler
 	authHandler := http.NewAuthHandler(authUC)
+	friendHandler := http.NewFriendHandler(friendUC)
 
 	// Routes
 	api := routes.Group("/api")
 	{
+		// Auth Routes
 		api.POST("/auth/signup", authHandler.Signup)
 		api.POST("/auth/login", authHandler.Login)
+		// Friend Routes
+		api.GET("/users/:id/friends", friendHandler.GetFriendsHandler)
+		api.POST("/users/:id/friends/:friendId", friendHandler.AddFriendHandler)
 	}
 
 	return routes
