@@ -18,6 +18,7 @@ func (u *UserUsecase) SearchUsers(query string, limit, offset int) ([]*models.Us
 	return u.userRepo.SearchUsers(query, limit, offset)
 }
 
+// UpdateUser -> PUT method
 func (u *UserUsecase) UpdateUser(userID uint, username, email, phone, avatarPath string) (*models.User, error) {
 	user, err := u.userRepo.FindByID(userID)
 	if err != nil {
@@ -44,4 +45,13 @@ func (u *UserUsecase) UpdateUser(userID uint, username, email, phone, avatarPath
 		return nil, err
 	}
 	return updatedUser, nil
+}
+
+// FindUserByID -> Get Method
+func (u *UserUsecase) FindUserByID(userID uint) (*models.User, error) {
+	user, err := u.userRepo.FindByID(userID)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

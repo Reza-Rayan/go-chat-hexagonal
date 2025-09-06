@@ -87,3 +87,20 @@ func (h *UserHandler) UpdateUserHandler(ctx *gin.Context) {
 		"user":    updatedUser,
 	})
 }
+
+// FindUserByID -> GET method
+func (h *UserHandler) FindUserByID(ctx *gin.Context) {
+	userIDInterface, exists := ctx.Get("userID")
+	if !exists {
+		ctx.JSON(401, gin.H{"error": "unauthorized"})
+		return
+	}
+	userID := userIDInterface.(uint)
+
+	user, err := h.userUC.FindUserByID(userID)
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"user": user})
+}

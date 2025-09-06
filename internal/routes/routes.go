@@ -40,6 +40,7 @@ func SetupRouter() *gin.Engine {
 			protected.POST("/users/:id/friends/:friendId", friendHandler.AddFriendHandler)
 			//	user Routes
 			protected.GET("/users/search", userHandler.SearchUsersHandler)
+			protected.GET("/users/profile", userHandler.FindUserByID)
 			protected.PUT("/users/profile", userHandler.UpdateUserHandler)
 		}
 	}
