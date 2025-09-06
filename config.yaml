@@ -1,5 +1,7 @@
 server:
   port: ":5050"
+  addr: "http://localhost:5050/"
+  upload_path: "uploads/avatars/"
 
 database:
   path: "chat.db"

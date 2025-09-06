@@ -12,7 +12,9 @@ type Config struct {
 }
 
 type ServerConfig struct {
-	Port string `mapstructure:"port"`
+	Port       string `mapstructure:"port"`
+	Addr       string `mapstructure:"addr"`
+	UploadPath string `mapstructure:"upload_path"`
 }
 
 type DatabaseConfig struct {

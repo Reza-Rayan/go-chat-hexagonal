@@ -66,3 +66,24 @@ func (r *UserRepository) SearchUsers(query string, limit, offset int) ([]*models
 	}
 	return users, nil
 }
+
+func (r *UserRepository) Update(user *models.User) (*models.User, error) {
+	if err := r.Db.Save(user).Error; err != nil {
+		return nil, err
+	}
+
+	var updatedUser models.User
+	if err := r.Db.First(&updatedUser, user.ID).Error; err != nil {
+		return nil, err
+	}
+
+	return &updatedUser, nil
+}
+
+func (r *UserRepository) FindByID(id uint) (*models.User, error) {
+	var user models.User
+	if err := r.Db.First(&user, id).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
