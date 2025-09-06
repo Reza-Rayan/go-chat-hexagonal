@@ -2,6 +2,7 @@ package routes
 
 import (
 	http "github.com/Reza-Rayan/internal/adapters/http/handlers"
+	"github.com/Reza-Rayan/internal/adapters/http/middleware"
 	"github.com/Reza-Rayan/internal/adapters/http/repositories"
 	"github.com/Reza-Rayan/internal/applications"
 	"github.com/Reza-Rayan/internal/db"
@@ -29,11 +30,16 @@ func SetupRouter() *gin.Engine {
 		// Auth Routes
 		api.POST("/auth/signup", authHandler.Signup)
 		api.POST("/auth/login", authHandler.Login)
-		// Friend Routes
-		api.GET("/users/:id/friends", friendHandler.GetFriendsHandler)
-		api.POST("/users/:id/friends/:friendId", friendHandler.AddFriendHandler)
-		//	user Routes
-		api.GET("/users/search", userHandler.SearchUsersHandler)
+
+		protected := routes.Group("/api")
+		protected.Use(middleware.AuthMiddleware())
+		{
+			// Friend Routes
+			protected.GET("/users/:id/friends", friendHandler.GetFriendsHandler)
+			protected.POST("/users/:id/friends/:friendId", friendHandler.AddFriendHandler)
+			//	user Routes
+			protected.GET("/users/search", userHandler.SearchUsersHandler)
+		}
 	}
 
 	return routes
