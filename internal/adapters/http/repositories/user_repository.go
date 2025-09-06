@@ -53,11 +53,14 @@ func (r *UserRepository) AddFriend(userID, friendID uint) error {
 	return r.Db.Model(&user).Association("Friends").Append(&friend)
 }
 
-func (r *UserRepository) SearchUsers(query string) ([]*models.User, error) {
+func (r *UserRepository) SearchUsers(query string, limit, offset int) ([]*models.User, error) {
 	var users []*models.User
-	if err := r.Db.Where("username LIKE ? OR email LIKE ?", "%"+query+"%", "%"+query+"%").Find(&users).Error; err != nil {
-		return nil, err
+	dbQuery := r.Db.Where("username LIKE ? OR email LIKE ?", "%"+query+"%", "%"+query+"%").
+		Limit(limit).Offset(offset).Find(&users)
+	if dbQuery.Error != nil {
+		return nil, dbQuery.Error
 	}
+
 	for _, u := range users {
 		u.Password = ""
 	}

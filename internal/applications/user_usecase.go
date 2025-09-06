@@ -13,6 +13,6 @@ func NewUserUsecase(userRepo *repositories.UserRepository) *UserUsecase {
 	return &UserUsecase{userRepo: userRepo}
 }
 
-func (u *UserUsecase) SearchUsers(query string) ([]*models.User, error) {
-	return u.userRepo.SearchUsers(query)
+func (u *UserUsecase) SearchUsers(query string, limit, offset int) ([]*models.User, error) {
+	return u.userRepo.SearchUsers(query, limit, offset)
 }
