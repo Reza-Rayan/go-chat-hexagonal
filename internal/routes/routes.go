@@ -23,6 +23,7 @@ func SetupRouter() *gin.Engine {
 	api := routes.Group("/api")
 	{
 		api.POST("/auth/signup", authHandler.Signup)
+		api.POST("/auth/login", authHandler.Login)
 	}
 
 	return routes

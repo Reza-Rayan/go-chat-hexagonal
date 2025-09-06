@@ -53,3 +53,28 @@ func (auth *AuthUsecase) Signup(username, password, email, phone, avatar string)
 	return createdUser, nil
 
 }
+
+// Login -> POST method
+func (auth *AuthUsecase) Login(email, password string) (string, *models.User, error) {
+	//	Find User
+	user, err := auth.userRepo.FindUserByEmail(email)
+	if err != nil {
+		return "", nil, errors.New("invalid email or password")
+	}
+
+	//	Check Password
+	if !utils.CheckPassword(password, user.Password) {
+		return "", nil, errors.New("invalid email or password")
+	}
+
+	// Generate JWT
+	token, err := utils.GenerateToken(user.ID, user.Username)
+	if err != nil {
+		return "", nil, err
+	}
+
+	// return user & token
+	user.Password = ""
+
+	return token, user, nil
+}

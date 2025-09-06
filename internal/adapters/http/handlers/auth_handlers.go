@@ -14,7 +14,8 @@ func NewAuthHandler(authUC *applications.AuthUsecase) *AuthHandler {
 	return &AuthHandler{authUC: authUC}
 }
 
-func (h *AuthHandler) Signup(c *gin.Context) {
+// Signup -> POST method
+func (h *AuthHandler) Signup(ctx *gin.Context) {
 	var req struct {
 		Username string `json:"username" binding:"required"`
 		Password string `json:"password" binding:"required"`
@@ -23,16 +24,40 @@ func (h *AuthHandler) Signup(c *gin.Context) {
 		Avatar   string `json:"avatar"`
 	}
 
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	user, err := h.authUC.Signup(req.Username, req.Password, req.Email, req.Phone, req.Avatar)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "user registered successfully", "user": user})
+	ctx.JSON(http.StatusCreated, gin.H{"message": "user registered successfully", "user": user})
+}
+
+// Login -> POST method
+func (h *AuthHandler) Login(ctx *gin.Context) {
+	var req struct {
+		Email    string `json:"email" binding:"required,email"`
+		Password string `json:"password" binding:"required"`
+	}
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	token, user, err := h.authUC.Login(req.Email, req.Password)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "login successful",
+		"token":   token,
+		"user":    user,
+	})
 }
