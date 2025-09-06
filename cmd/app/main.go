@@ -3,17 +3,20 @@ package main
 import (
 	"github.com/Reza-Rayan/internal/config"
 	"github.com/Reza-Rayan/internal/db"
-	"github.com/gin-gonic/gin"
+	"github.com/Reza-Rayan/internal/routes"
 )
 
 func main() {
-	// Load Configs
+	// Load Config
 	cfg := config.LoadConfig()
-	// Load Database
+
+	// Init Database
 	db.InitDB()
 
-	server := gin.Default()
+	// Setup Router
+	r := routes.SetupRouter()
 
-	server.Run(cfg.Server.Port)
+	// Run Server
+	r.Run(cfg.Server.Port)
 
 }

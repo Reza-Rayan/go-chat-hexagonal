@@ -1,1 +1,55 @@
 package applications
+
+import (
+	"errors"
+	"github.com/Reza-Rayan/internal/adapters"
+	"github.com/Reza-Rayan/internal/domain/models"
+	"golang.org/x/crypto/bcrypt"
+	"time"
+)
+
+type AuthUsecase struct {
+	userRepo *adapters.UserRepository
+}
+
+func NewAuthUsecase(userRepo *adapters.UserRepository) *AuthUsecase {
+	return &AuthUsecase{userRepo: userRepo}
+}
+
+// Signup -> POST method
+func (auth *AuthUsecase) Signup(username, password, email, phone, avatar string) (*models.User, error) {
+	// Check username exists or not
+	if existing, _ := auth.userRepo.FindByUsername(username); existing != nil {
+		return nil, errors.New("username already taken")
+	}
+
+	// Check email exists or not
+	if existing, _ := auth.userRepo.FindUserByEmail(email); existing != nil {
+		return nil, errors.New("email already registered")
+	}
+
+	//	Create & HashPassword
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+
+	newUser := &models.User{
+		Username:  username,
+		Email:     email,
+		Phone:     phone,
+		Avatar:    avatar,
+		Password:  string(hash),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+
+	createdUser, err := auth.userRepo.Create(newUser)
+	if err != nil {
+		return nil, err
+	}
+
+	createdUser.Password = ""
+	return createdUser, nil
+
+}
