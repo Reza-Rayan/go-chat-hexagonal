@@ -24,7 +24,7 @@ Language: Go
 
 Framework: Gin
 
-Database: MySQL (via GORM)
+Database: SQLite3 (via GORM)
 
 Config: Viper
 
