@@ -1,0 +1,8 @@
+# IDE/editor files
+.vscode/
+.idea/
+
+
+# Config files
+config.yaml
+.env
